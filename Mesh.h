@@ -1,29 +1,37 @@
 #pragma once
 #include <glm\glm.hpp>
 #include <GL\glew.h>
+#include <vector>
+#include "Shader.h"
 
-class Vertex {
-public:
-	Vertex(glm::vec3 pos) {
-		this->pos = pos;
-	}
-private:
-	glm::vec3 pos;
+//TODO: complete mesh handler. write ".dae" loader.
+struct Vertex {
+	glm::vec3 position;
+	glm::vec3 normal;
+	glm::vec2 uvcoord;
 };
 
 class Mesh
 {
 public:
-	Mesh(Vertex* vertices, unsigned int num_Vertices);
+	std::vector<Vertex> vertices;
+	std::vector<GLuint> indices;
+	std::vector<Texture> textures;
+
+	Mesh(std::vector<Vertex> vertices, std::vector <GLuint> indices, std::vector<Texture> textures);
 
 	virtual ~Mesh();
 
 	void Draw();
+	void setShader(Shader* shader);
 private:
 	Mesh(const Mesh& other);
 	void operator=(const Mesh& other);
 
-	GLuint VAO;
-	GLuint VBO;
+	GLuint VAO, VBO, EBO;
+
+	Shader* shader;
+
+	void init();
 };
 
